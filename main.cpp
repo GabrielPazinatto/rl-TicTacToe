@@ -130,14 +130,16 @@ void drawHeader(int playerTurn, bool thereIsWinner, int squaresChecked)
             DrawText("Player 2 won!", (screenWidth - MeasureText("Player 2 won!", 30))/2, 35, 30, WHITE);
     }
 
+    DrawText("Press SPACE to reset.", (screenWidth - MeasureText("Press SPACE to reset", 10))/2, 90, 10, WHITE);
+
 }
 
 int main () {
-
     TableSquare tableSquares[3][3];
     Vector2 mousePos;
     int playerTurn = 1;
     int squaresChecked = 0;
+    int i, j;
 
     InitWindow(screenWidth, screenHeight, "TicTacToe");
     SetTargetFPS(60);
@@ -155,6 +157,17 @@ int main () {
             if(checkTableClick(&mousePos, tableSquares, playerTurn)){
                 updatePlayerTurn(&playerTurn);
                 squaresChecked++;}
+        }
+
+        if(IsKeyPressed(KEY_SPACE)){
+            for(i=0; i<3; i++){
+                for(j=0; j<3; j++){
+                    tableSquares[i][j].marked = false;
+                    tableSquares[i][j].owner = 0;
+                    squaresChecked = 0;
+                    playerTurn = 1;
+                 }
+            }
         }
 
         EndDrawing();
