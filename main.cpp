@@ -1,5 +1,9 @@
 #include <iostream>
 #include <raylib.h>
+#include <string.h>
+
+#define screenWidth 300
+#define screenHeight 400
 
 using namespace std;
 
@@ -108,14 +112,32 @@ bool checkWinner(TableSquare tableSquare[3][3]){
 
 return winner;}
 
-int main () {
+void drawHeader(int playerTurn, bool thereIsWinner, int squaresChecked)
+{
+    if(squaresChecked == 9 && !thereIsWinner)
+        DrawText("Tie!", (screenWidth - MeasureText("Tie!", 30))/2, 35, 30, WHITE);
 
-    const int screenWidth = 300;
-    const int screenHeight = 400;
+    else if(!thereIsWinner){
+        if(playerTurn == 1)
+            DrawText("Player 1's turn.", (screenWidth - MeasureText("Player 1's turn.", 30))/2, 35, 30, WHITE);
+        else
+            DrawText("Player 2's turn.", (screenWidth - MeasureText("Player 1's turn.", 30))/2, 35, 30, WHITE);}
+
+    else if (thereIsWinner){
+        if(playerTurn == 2)
+            DrawText("Player 1 won!", (screenWidth - MeasureText("Player 1 won!", 30))/2, 35, 30, WHITE);
+        else if(playerTurn == 1)
+            DrawText("Player 2 won!", (screenWidth - MeasureText("Player 2 won!", 30))/2, 35, 30, WHITE);
+    }
+
+}
+
+int main () {
 
     TableSquare tableSquares[3][3];
     Vector2 mousePos;
     int playerTurn = 1;
+    int squaresChecked = 0;
 
     InitWindow(screenWidth, screenHeight, "TicTacToe");
     SetTargetFPS(60);
@@ -126,11 +148,13 @@ int main () {
         BeginDrawing();
         ClearBackground(BLACK);
 
+        drawHeader(playerTurn, checkWinner(tableSquares), squaresChecked);
         drawTableSquares(tableSquares);
 
         if(!checkWinner(tableSquares)){
-            if(checkTableClick(&mousePos, tableSquares, playerTurn))
+            if(checkTableClick(&mousePos, tableSquares, playerTurn)){
                 updatePlayerTurn(&playerTurn);
+                squaresChecked++;}
         }
 
         EndDrawing();
